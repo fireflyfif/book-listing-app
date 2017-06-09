@@ -19,16 +19,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by iva on 6/6/17.
+ * Helper methods related to requesting and receiving books data from Google Books API.
  */
+public final class QueryUtils {
 
-public class QueryUtils {
-
+    /** Tag for the log messages */
     private static final String LOG_TAG = QueryUtils.class.getSimpleName();
 
+    /**
+     * This class is only meant to hold static variables and methods, which can be accessed
+     * directly from the class name QueryUtils (and an object instance of QueryUtils is not needed).
+     */
     private QueryUtils() {
     }
 
+    /**
+     * Return list of {@link Books} objects that has been built up from
+     * parsing a JSON response.
+     */
     public static List<Books> extractFeaturesFromJson(String booksJSON) {
 
         // If the JSON string is empty or null, then return early.
@@ -43,7 +51,6 @@ public class QueryUtils {
         // is formatted, a JSONException exception object will be thrown.
         // Catch the exception so the app doesn't crash, and print the error message to the logs.
         try {
-
             // Convert JSONObject from the JSON response string
             JSONObject baseJsonResponse = new JSONObject(booksJSON);
 
@@ -51,8 +58,9 @@ public class QueryUtils {
             // which represents a list of information about the book
             JSONArray booksArray = baseJsonResponse.getJSONArray("items");
 
+            // For each book in the booksArray, create an {@link Books} object
             for (int i = 0; i < booksArray.length(); i++) {
-                // For a single book and position it within the list of books
+                // Get a single book and position it within the list of books
                 JSONObject currentBook = booksArray.getJSONObject(i);
 
                 // For a given book, extract the JSONObject associated with the
@@ -63,9 +71,9 @@ public class QueryUtils {
                 // Extract the value from the key called "title"
                 String title = volumeInfo.getString("title");
 
-                // Extract the value from the key called "subtitle"
-//                String subtitle = currentBook.getString("subtitle");
-
+                /// Extract "authors" JSONArray associated with the key called "authors"
+                // which may represents a list of authors of the book
+                // TODO: Check if this is a good logic!
                 JSONArray authorsArray;
                 StringBuilder authors = new StringBuilder();
                 if (volumeInfo.has("authors")) {
@@ -79,14 +87,33 @@ public class QueryUtils {
                     authors.append("No Author");
                 }
 
+                // Extract the value from the key called "subtitle"
+                String subtitle = "";
+                if (volumeInfo.has("subtitle")) {
+                    subtitle = volumeInfo.getString("subtitle");
+                }
+                // This is probably unnecessary ???
+                else {
+                    subtitle = "";
+                }
+
+                // Extract the URL of the book
+//                String url = null;
+//                if (volumeInfo.has("infoLink")) {
+//                    url = volumeInfo.getString("infoLink");
+//                }
+
                 // Create a new {@link Books} object with the title, subtitle and authors
                 // from the JSON response.
-                Books booksObject = new Books(title, authors);
+                Books booksObject = new Books(title, authors, subtitle);
 
                 // Add the new {@link Books} to the list of books
                 books.add(booksObject);
             }
         } catch (JSONException e) {
+            // If an error is thrown when executing any of the above statements in the "try" block,
+            // catch the exception here, so the app doesn't crash. Print a log message
+            // with the message from the exception.
             Log.e(LOG_TAG, "Problem parsing the JSON list books", e);
         }
 
@@ -110,10 +137,10 @@ public class QueryUtils {
         }
 
         // Extract relevant fields from the JSON response and create a list {@link Books}
-        List<Books> booksList = extractFeaturesFromJson(jsonResponse);
+//        List<Books> booksList = extractFeaturesFromJson(jsonResponse);
 
         // Return the list of {@link Books}.
-        return booksList;
+        return extractFeaturesFromJson(jsonResponse);
     }
 
     /**
@@ -158,7 +185,7 @@ public class QueryUtils {
                 Log.e(LOG_TAG, "Response code of the object: " + urlConnection.getResponseCode());
             }
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Problem retrieving the earthquake JSON result: ", e);
+            Log.e(LOG_TAG, "Problem retrieving the JSON result: ", e);
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();

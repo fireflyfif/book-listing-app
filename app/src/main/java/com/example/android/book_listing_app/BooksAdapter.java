@@ -11,13 +11,16 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by iva on 6/7/17.
  */
 
 public class BooksAdapter extends ArrayAdapter<Books> {
 
-    public BooksAdapter(Activity context, ArrayList<Books> books ) {
+    public BooksAdapter(Activity context, ArrayList<Books> books) {
         super(context, 0, books);
     }
 
@@ -25,27 +28,50 @@ public class BooksAdapter extends ArrayAdapter<Books> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
+
+
+        ViewHolder holder;
+        View booksList = convertView;
+
         // Check if there is an existing list item view (called convertView) that we can reuse,
         // otherwise, if convertView is null, then inflate a new item layout.
-        View listItemView = convertView;
-        if (listItemView == null) {
-            listItemView = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
+        if (booksList == null) {
+            holder = new ViewHolder(booksList);
+            booksList = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
+            holder.titleView = (TextView) booksList.findViewById(R.id.book_title);
+            holder.subtitleView = (TextView) booksList.findViewById(R.id.subtitle);
+            holder.authorView = (TextView) booksList.findViewById(R.id.author);
+            booksList.setTag(holder);
+        } else {
+            holder = (ViewHolder) booksList.getTag();
         }
 
         // Find the book at the given position in the list of books
         Books currentBook = getItem(position);
 
-        // Find the TextView with view ID title
-        TextView titleView = (TextView) listItemView.findViewById(R.id.book_title);
         // Format the title of the current book in that TextView
-        titleView.setText(currentBook.getTitle());
+        holder.titleView.setText(currentBook.getTitle());
 
-//        TextView subtitleView = (TextView) listItemView.findViewById(R.id.book_subtitle);
-//        subtitleView.setText(currentBook.getSubtitle());
+        // Format the subtitle at the given position in the list of books
+        holder.subtitleView.setText(currentBook.getSubtitle());
 
-        TextView authorView = (TextView) listItemView.findViewById(R.id.author);
-        authorView.setText(currentBook.getAuthor());
+        // Format the title of the current book in that TextView
+        holder.authorView.setText(currentBook.getAuthor());
 
-        return listItemView;
+        // Return the view
+        return booksList;
+    }
+
+    private static class ViewHolder {
+        @BindView(R.id.book_title)
+        TextView titleView;
+        @BindView(R.id.subtitle)
+        TextView subtitleView;
+        @BindView(R.id.author)
+        TextView authorView;
+
+        public ViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
     }
 }

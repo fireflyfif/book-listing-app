@@ -1,3 +1,11 @@
 <resources>
-    <string name="app_name">Book-Listing-App</string>
+    <string name="app_name">Find Your Book</string>
+
+    <string name="no_internet">No internet connection.</string>
+
+    <string name="no_data_found">Oops, No data found.</string>
+
+    <string name="books_android">You can start with a few books about Android.</string>
+
+    <string name="toast_enter_word">Please enter a word to search for book titles</string>
 </resources>
