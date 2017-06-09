@@ -98,14 +98,14 @@ public final class QueryUtils {
                 }
 
                 // Extract the URL of the book
-//                String url = null;
-//                if (volumeInfo.has("infoLink")) {
-//                    url = volumeInfo.getString("infoLink");
-//                }
+                String url = null;
+                if (volumeInfo.has("infoLink")) {
+                    url = volumeInfo.getString("infoLink");
+                }
 
                 // Create a new {@link Books} object with the title, subtitle and authors
                 // from the JSON response.
-                Books booksObject = new Books(title, authors, subtitle);
+                Books booksObject = new Books(title, authors, subtitle, url);
 
                 // Add the new {@link Books} to the list of books
                 books.add(booksObject);

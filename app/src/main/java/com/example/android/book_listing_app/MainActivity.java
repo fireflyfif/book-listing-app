@@ -1,8 +1,10 @@
 package com.example.android.book_listing_app;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -77,6 +80,17 @@ public class MainActivity extends AppCompatActivity {
         // Set the adapter on the {@link ListView)
         // so the list can be populated in the user interface
         booksListView.setAdapter(mAdapter);
+
+        // OnItemClickListener open the website for the current book
+        booksListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Books currentBook = mAdapter.getItem(position);
+                Uri bookUri = Uri.parse(currentBook.getUrl());
+                Intent webIntent = new Intent(Intent.ACTION_VIEW, bookUri);
+                startActivity(webIntent);
+            }
+        });
 
         BookListingAsyncTask task = new BookListingAsyncTask();
 
