@@ -4,60 +4,54 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/color_light_gray"
     android:orientation="horizontal"
-    android:paddingBottom="16dp"
-    android:paddingTop="16dp">
+    android:paddingBottom="@dimen/padding_6dp"
+    android:paddingTop="@dimen/padding_6dp">
 
     <ImageView
         android:id="@+id/book_image"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:src="@drawable/oslo_guide_launching_ic"/>
+        android:layout_width="@dimen/book_width"
+        android:layout_height="@dimen/book_height"
+        android:contentDescription="@string/description_imageBook"
+        android:src="@drawable/librarian_book_01" />
 
     <LinearLayout
         android:id="@+id/book_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="6dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/padding_6dp"
+        android:paddingRight="@dimen/padding_6dp">
 
+        <!-- Title of the book TextView. -->
         <TextView
             android:id="@+id/book_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/textViewBook"
+            android:layout_marginBottom="@dimen/margin_6dp"
             android:ellipsize="end"
-            android:layout_gravity="top"
-            android:fontFamily="sans-serif-medium"
-            android:maxLines="3"
-            android:textAllCaps="true"
-            android:textSize="16sp"
-            tools:text="Book's Title"
-            android:layout_marginBottom="6dp"
-            android:background="@android:color/darker_gray"/>
+            tools:text="Book's Title" />
 
+        <!-- Divider. -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
+            android:layout_marginBottom="@dimen/margin_6dp"
+            android:background="@color/color_light_blueGray" />
+
+        <!-- Subtitle of the book TextView. -->
         <TextView
             android:id="@+id/subtitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:fontFamily="sans-serif-medium"
-            android:maxLines="2"
-            android:textSize="14sp"
+            style="@style/textViewBook.subtitle"
+            android:ellipsize="end"
             tools:text="Subtitle here." />
 
+        <!-- Author of the book TextView. -->
         <TextView
             android:id="@+id/author"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:fontFamily="sans-serif-medium"
-            android:maxLines="3"
-            android:textSize="14sp"
+            style="@style/textViewBook.author"
             tools:text="Author's Name" />
 
-
     </LinearLayout>
-
-
 
 </LinearLayout>

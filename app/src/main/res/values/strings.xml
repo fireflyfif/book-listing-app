@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Find Your Book</string>
+    <string name="app_name">Librarian</string>
 
     <string name="no_internet">No internet connection.</string>
 
@@ -8,4 +8,10 @@
     <string name="books_android">You can start with a few books about Android.</string>
 
     <string name="toast_enter_word">Please enter a word to search for book titles</string>
+
+    <string name="search_hint_text">Search books here.</string>
+
+    <string name="description_search">Icon for the search Image Button.</string>
+
+    <string name="description_imageBook">Temporary image that replace the book image.</string>
 </resources>

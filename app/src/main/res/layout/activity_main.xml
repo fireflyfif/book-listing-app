@@ -1,63 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
-    android:padding="6dp"
+    android:padding="@dimen/padding_6dp"
     tools:context="com.example.android.book_listing_app.MainActivity">
 
+    <!-- Search Field. -->
     <LinearLayout
         android:id="@+id/horizontal_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp">
+        android:paddingBottom="@dimen/padding_10dp"
+        android:paddingTop="@dimen/padding_10dp">
 
         <EditText
             android:id="@+id/search_bar"
-            android:layout_width="0dp"
-            android:layout_weight="7"
-            android:layout_height="wrap_content"
-            android:hint="Search books here." />
+            style="@style/searchEditText"
+            android:hint="@string/search_hint_text" />
 
         <ImageButton
             android:id="@+id/search_button"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/search_bar"
-            android:background="@android:color/transparent"
-            android:src="@drawable/ic_search_white_24dp"/>
+            style="@style/searchButton"
+            android:contentDescription="@string/description_search"
+            android:src="@drawable/ic_search_gray" />
 
     </LinearLayout>
 
+    <!-- Temporary message for the user to start with. -->
     <TextView
         android:id="@+id/temp_text_view"
+        style="@style/mediumTextView"
         android:layout_below="@+id/horizontal_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="You can start with few Android books."
-        android:textAppearance="?android:textAppearanceMedium"/>
+        tools:text="You can start with few Android books." />
 
+    <!-- List View which is populated with the query from the user input. -->
     <ListView
         android:id="@+id/list_view"
-        android:layout_below="@+id/temp_text_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:orientation="vertical"/>
+        android:layout_below="@+id/temp_text_view"
+        android:orientation="vertical" />
 
+    <!-- Warning message is only shown when there is no internet connection. -->
     <TextView
         android:id="@+id/empty_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/mediumTextView"
         android:layout_centerInParent="true"
-        tools:text="No Books Found."
-        android:textAppearance="?android:textAppearanceMedium"/>
+        tools:text="No Books Found." />
 
     <!-- Loading indicator is only shown before the first load -->
     <ProgressBar
@@ -65,6 +58,6 @@
         style="@style/Widget.AppCompat.ProgressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>

@@ -24,24 +24,33 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Tag for log messages
     private static final String LOG_TAG = MainActivity.class.getName();
 
+    // Base URL from the Google Books API
     private static final String BOOK_URL_BASE =
             "https://www.googleapis.com/books/v1/volumes?q=";
 
+    // Google Books URL with the given key Android for the query result
     private static final String BOOK_URL_ANDROID =
             "https://www.googleapis.com/books/v1/volumes?q=android&maxResults=10";
 
+    // Adapter for the Books list
     private BooksAdapter mAdapter;
 
+    // Edit field where the user can search for books
     private EditText userInput;
 
+    // TextView that is visible when there is a problem with the connection or the query
     private TextView mEmptyView;
 
+    // ProgressBar that is visible when
     private View loadingIndicator;
 
+    // TextView that is visible only when the app starts and there is no user search for new book
     private TextView welcomeText;
 
+    // Boolean that checks if there is an internet connection
     private boolean isInternetConnected;
 
     @Override
@@ -122,19 +131,31 @@ public class MainActivity extends AppCompatActivity {
 
                 // If there is a network connection, fetch data
                 if (isInternetConnected) {
-                    String searchWord = userInput.getText().toString();
+                    // The search word that the user writes
+                    // If the user search for more then one word, it escapes the space between
+                    // the words.
+                    // If the user search for word in uppercase, it turns into lowercase.
+                    String searchWord = userInput.getText().toString().replaceAll("\\s+", "")
+                            .toLowerCase();
+                    // Add to the search query maximum results of 20
+                    String maxResult = "&maxResults=20";
                     if (searchWord.isEmpty()) {
                         Toast.makeText(MainActivity.this, getString(R.string.toast_enter_word),
                                 Toast.LENGTH_SHORT).show();
                     } else {
+                        // Show the ProgressBar to visible
+//                        loadingIndicator.setVisibility(View.VISIBLE);
                         // Hide the empty state text
                         mEmptyView.setVisibility(View.GONE);
+                        // Hide the welcome TextView
                         welcomeText.setVisibility(View.GONE);
                         // Start the AsyncTask to fetch the books data
-                        BookListingAsyncTask task = new BookListingAsyncTask();
-                        task.execute(BOOK_URL_BASE + searchWord);
+                        new BookListingAsyncTask().execute(BOOK_URL_BASE + searchWord + maxResult);
+                        Log.e(LOG_TAG, "Show the URL with the user input: " + BOOK_URL_BASE
+                                + searchWord);
                     }
                 } else {
+                    // Hide the welcome TextView
                     welcomeText.setVisibility(View.GONE);
                     // Otherwise, display error
                     // First, hide loading indicator so error will be visible
@@ -182,7 +203,6 @@ public class MainActivity extends AppCompatActivity {
          * We should not update the UI from a background thread, so we return a list of
          * {@link Books}s as the result.
          *
-         * @param urls
          * @return {@link Books}s as the result
          */
         @Override
@@ -213,6 +233,7 @@ public class MainActivity extends AppCompatActivity {
             if (books != null && !books.isEmpty()) {
                 mAdapter.addAll(books);
             } else {
+                // Set empty state text to display "Oops, No data found."
                 mEmptyView.setText(R.string.no_data_found);
             }
         }

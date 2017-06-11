@@ -23,7 +23,9 @@ import java.util.List;
  */
 public final class QueryUtils {
 
-    /** Tag for the log messages */
+    /**
+     * Tag for the log messages
+     */
     private static final String LOG_TAG = QueryUtils.class.getSimpleName();
 
     /**
@@ -73,7 +75,6 @@ public final class QueryUtils {
 
                 /// Extract "authors" JSONArray associated with the key called "authors"
                 // which may represents a list of authors of the book
-                // TODO: Check if this is a good logic!
                 JSONArray authorsArray;
                 StringBuilder authors = new StringBuilder();
                 if (volumeInfo.has("authors")) {
@@ -124,7 +125,8 @@ public final class QueryUtils {
     /**
      * Query the Google Books API and return a list of {@link Books} object.
      */
-    public static List<Books> fetchBooksData (String requestUrl) {
+    public static List<Books> fetchBooksData(String requestUrl) {
+
         // Create URL object
         URL url = createUrl(requestUrl);
 
@@ -135,9 +137,6 @@ public final class QueryUtils {
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error closing input stream", e);
         }
-
-        // Extract relevant fields from the JSON response and create a list {@link Books}
-//        List<Books> booksList = extractFeaturesFromJson(jsonResponse);
 
         // Return the list of {@link Books}.
         return extractFeaturesFromJson(jsonResponse);

@@ -28,8 +28,6 @@ public class BooksAdapter extends ArrayAdapter<Books> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
-
-
         ViewHolder holder;
         View booksList = convertView;
 
