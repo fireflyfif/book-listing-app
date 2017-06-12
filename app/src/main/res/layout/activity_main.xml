@@ -35,7 +35,7 @@
         android:id="@+id/temp_text_view"
         style="@style/mediumTextView"
         android:layout_below="@+id/horizontal_layout"
-        tools:text="You can start with few Android books." />
+        tools:text="@string/temp_textView" />
 
     <!-- List View which is populated with the query from the user input. -->
     <ListView
@@ -50,7 +50,7 @@
         android:id="@+id/empty_text_view"
         style="@style/mediumTextView"
         android:layout_centerInParent="true"
-        tools:text="No Books Found." />
+        tools:text="@string/no_books_found" />
 
     <!-- Loading indicator is only shown before the first load -->
     <ProgressBar

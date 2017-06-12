@@ -14,4 +14,14 @@
     <string name="description_search">Icon for the search Image Button.</string>
 
     <string name="description_imageBook">Temporary image that replace the book image.</string>
+
+    <string name="temp_textView">You can start with few Android books.</string>
+
+    <string name="no_books_found">No Books Found.</string>
+
+    <string name="books_title">Book\'s Title</string>
+
+    <string name="books_subtitle">Subtitle here.</string>
+
+    <string name="books_author">Author\'s Name.</string>
 </resources>

@@ -35,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String BOOK_URL_ANDROID =
             "https://www.googleapis.com/books/v1/volumes?q=android&maxResults=10";
 
+    // Add a maximum results of 20 to the search query
+    private static final String MAX_RESULTS = "&maxResults=20";
+
     // Adapter for the Books list
     private BooksAdapter mAdapter;
 
@@ -75,8 +78,8 @@ public class MainActivity extends AppCompatActivity {
 
         isInternetConnected = checkInternetConnection();
 
-        // Hide the ProgressBar
-        loadingIndicator.setVisibility(View.GONE);
+        // Set empty state view on the list view with books, when there is no data.
+        booksListView.setEmptyView(mEmptyView);
 
         // Hide the keyboard when the app starts
         getWindow().setSoftInputMode(
@@ -97,7 +100,9 @@ public class MainActivity extends AppCompatActivity {
                 Books currentBook = mAdapter.getItem(position);
                 Uri bookUri = Uri.parse(currentBook.getUrl());
                 Intent webIntent = new Intent(Intent.ACTION_VIEW, bookUri);
-                startActivity(webIntent);
+                if (webIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(webIntent);
+                }
             }
         });
 
@@ -105,14 +110,18 @@ public class MainActivity extends AppCompatActivity {
 
         // If there is a network connection, fetch data
         if (isInternetConnected) {
+            Log.e(LOG_TAG, "This is called when there is an Internet connection.");
             // Start the AsyncTask to fetch the books data
             task.execute(BOOK_URL_ANDROID);
             welcomeText.setText(R.string.books_android);
         } else {
+            Log.e(LOG_TAG, "This is called when there is NO Internet connection.");
             welcomeText.setVisibility(View.GONE);
             // Otherwise, display error
             // First, hide loading indicator so error will be visible
             loadingIndicator.setVisibility(View.GONE);
+            //Show the empty state with no connection error message
+            mEmptyView.setVisibility(View.VISIBLE);
             //Update empty state with no connection error message
             mEmptyView.setText(R.string.no_internet);
         }
@@ -131,35 +140,36 @@ public class MainActivity extends AppCompatActivity {
 
                 // If there is a network connection, fetch data
                 if (isInternetConnected) {
+                    Log.e(LOG_TAG, "This is called when there is an Internet connection.");
                     // The search word that the user writes
                     // If the user search for more then one word, it escapes the space between
                     // the words.
                     // If the user search for word in uppercase, it turns into lowercase.
                     String searchWord = userInput.getText().toString().replaceAll("\\s+", "")
                             .toLowerCase();
-                    // Add to the search query maximum results of 20
-                    String maxResult = "&maxResults=20";
                     if (searchWord.isEmpty()) {
                         Toast.makeText(MainActivity.this, getString(R.string.toast_enter_word),
                                 Toast.LENGTH_SHORT).show();
                     } else {
-                        // Show the ProgressBar to visible
-//                        loadingIndicator.setVisibility(View.VISIBLE);
+                        Log.e(LOG_TAG, "This is called when there is an Internet connection and a new search word.");
                         // Hide the empty state text
                         mEmptyView.setVisibility(View.GONE);
                         // Hide the welcome TextView
                         welcomeText.setVisibility(View.GONE);
                         // Start the AsyncTask to fetch the books data
-                        new BookListingAsyncTask().execute(BOOK_URL_BASE + searchWord + maxResult);
+                        new BookListingAsyncTask().execute(BOOK_URL_BASE + searchWord + MAX_RESULTS);
                         Log.e(LOG_TAG, "Show the URL with the user input: " + BOOK_URL_BASE
                                 + searchWord);
                     }
                 } else {
+                    Log.e(LOG_TAG, "This is called when there is NO Internet connection.");
                     // Hide the welcome TextView
                     welcomeText.setVisibility(View.GONE);
                     // Otherwise, display error
                     // First, hide loading indicator so error will be visible
                     loadingIndicator.setVisibility(View.GONE);
+                    //Show the empty state with no connection error message
+                    mEmptyView.setVisibility(View.VISIBLE);
                     //Update empty state with no connection error message
                     mEmptyView.setText(R.string.no_internet);
                 }
@@ -180,6 +190,8 @@ public class MainActivity extends AppCompatActivity {
         if (networkInfo != null && networkInfo.isConnected()) {
             return true;
         } else {
+            //Show the empty state with no connection error message
+            mEmptyView.setVisibility(View.VISIBLE);
             //Update empty state with no connection error message
             mEmptyView.setText(R.string.no_internet);
             return false;
@@ -197,6 +209,17 @@ public class MainActivity extends AppCompatActivity {
      * UI thread, so it can use the produced data to update the UI.
      */
     private class BookListingAsyncTask extends AsyncTask<String, Void, List<Books>> {
+
+        /**
+         * This method runs on the UI thread before doInBackground().
+         * It shows the progress bar when the internet connection is delayed or slow.
+         */
+        @Override
+        protected void onPreExecute() {
+            Log.e(LOG_TAG, "When the onPreExecute is called?");
+            // Show loading indicator if the Internet Connection is delayed or slow.
+            loadingIndicator.setVisibility(View.VISIBLE);
+        }
 
         /**
          * This method runs on a background thread and performs the network request.
@@ -225,6 +248,9 @@ public class MainActivity extends AppCompatActivity {
          */
         @Override
         protected void onPostExecute(List<Books> books) {
+            // First, hide loading indicator so error will be visible
+            loadingIndicator.setVisibility(View.GONE);
+
             // Clear the adapter of previous earthquake data
             mAdapter.clear();
 
@@ -233,7 +259,9 @@ public class MainActivity extends AppCompatActivity {
             if (books != null && !books.isEmpty()) {
                 mAdapter.addAll(books);
             } else {
-                // Set empty state text to display "Oops, No data found."
+                //Show the empty state with no connection error message
+                mEmptyView.setVisibility(View.VISIBLE);
+                //Update empty state text to display "Oops, No data found."
                 mEmptyView.setText(R.string.no_data_found);
             }
         }
