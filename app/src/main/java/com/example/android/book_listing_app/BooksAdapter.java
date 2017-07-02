@@ -34,8 +34,8 @@ public class BooksAdapter extends ArrayAdapter<Books> {
         // Check if there is an existing list item view (called convertView) that we can reuse,
         // otherwise, if convertView is null, then inflate a new item layout.
         if (booksList == null) {
-            holder = new ViewHolder(booksList);
             booksList = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
+            holder = new ViewHolder(booksList);
             holder.titleView = (TextView) booksList.findViewById(R.id.book_title);
             holder.subtitleView = (TextView) booksList.findViewById(R.id.subtitle);
             holder.authorView = (TextView) booksList.findViewById(R.id.author);
@@ -60,7 +60,7 @@ public class BooksAdapter extends ArrayAdapter<Books> {
         return booksList;
     }
 
-    private static class ViewHolder {
+    static class ViewHolder {
         @BindView(R.id.book_title)
         TextView titleView;
         @BindView(R.id.subtitle)
